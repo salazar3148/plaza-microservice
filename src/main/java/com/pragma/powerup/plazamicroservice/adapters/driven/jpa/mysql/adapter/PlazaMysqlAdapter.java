@@ -20,4 +20,9 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
 
         plazaRepository.save(plazaEntityMapper.toEntity(plaza));
     }
+
+    @Override
+    public void updateDish(Long idDish) {
+
+    }
 }
