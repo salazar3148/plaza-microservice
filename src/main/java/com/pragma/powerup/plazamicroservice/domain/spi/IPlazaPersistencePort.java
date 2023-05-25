@@ -4,4 +4,6 @@ import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
 
 public interface IPlazaPersistencePort {
     void savePlaza(Plaza plaza);
+
+    void updateDish(Long idDish);
 }
