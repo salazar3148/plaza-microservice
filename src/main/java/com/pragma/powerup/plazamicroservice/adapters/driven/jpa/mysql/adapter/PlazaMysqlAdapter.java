@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PlazaMysqlAdapter implements IPlazaPersistencePort {
+
+
     private final IPlazaRepository plazaRepository;
     private final IPlazaEntityMapper plazaEntityMapper;
 
@@ -17,6 +19,8 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
         if (plazaRepository.findByNit(plaza.getNit()).isPresent()) {
             throw new PersonAlreadyExistsException();
         }
+
+        //if(userServiceAdapter.getUser())
 
         plazaRepository.save(plazaEntityMapper.toEntity(plaza));
     }

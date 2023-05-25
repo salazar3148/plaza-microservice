@@ -6,7 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PlazaRequestDto {
-    private Long id;
     private Long nit;
     private String name;
     private String address;
