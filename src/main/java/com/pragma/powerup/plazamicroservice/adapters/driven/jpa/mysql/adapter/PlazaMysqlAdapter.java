@@ -19,10 +19,7 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
     }
 
     @Override
-<<<<<<< HEAD
-    public void updateDish(Long idDish) {
 
-=======
     public Plaza getPlaza(Long id) {
         return plazaEntityMapper.toPlaza(
                 plazaRepository.findById(id).orElseThrow()
@@ -42,6 +39,6 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
     @Override
     public Boolean existsByIdOwnerAndId(Long idOwner, Long id) {
         return plazaRepository.existsByIdOwnerAndId(idOwner, id);
->>>>>>> main
+
     }
 }
