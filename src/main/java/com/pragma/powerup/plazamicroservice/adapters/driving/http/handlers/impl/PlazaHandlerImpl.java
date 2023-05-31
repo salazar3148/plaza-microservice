@@ -14,7 +14,7 @@ public class PlazaHandlerImpl implements IPlazaHandler {
     private final IPlazaRequestMapper plazaRequestMapper;
 
     @Override
-    public void savePlaza(PlazaRequestDto plazaRequestDto) {
-        plazaServicePort.savePlaza(plazaRequestMapper.toPlaza(plazaRequestDto));
+    public void savePlaza(PlazaRequestDto plazaRequestDto, String token) {
+        plazaServicePort.savePlaza(plazaRequestMapper.toPlaza(plazaRequestDto), token);
     }
 }
