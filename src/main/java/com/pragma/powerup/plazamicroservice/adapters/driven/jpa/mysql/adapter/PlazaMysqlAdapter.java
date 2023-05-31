@@ -25,7 +25,6 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
                 plazaRepository.findById(id).orElseThrow()
         );
     }
-
     @Override
     public boolean existById(Long id) {
         return plazaRepository.existsById(id);
