@@ -1,12 +1,12 @@
 package com.pragma.powerup.plazamicroservice.domain.usecase;
 import com.pragma.powerup.plazamicroservice.domain.api.IPlazaServicePort;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidRoleAssignmentException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.PlazaAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
 import com.pragma.powerup.plazamicroservice.domain.model.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
-
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ADMIN_ROLE_ID;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.OWNER_ROLE_ID;
 
@@ -22,8 +22,13 @@ public class PlazaUseCase implements IPlazaServicePort {
     @Override
     public void savePlaza(Plaza plaza, String token) {
 
+
         User adminUser = userServicePort.getUser(token);
-        User ownerUser = userServicePort.getUserById(token, plaza.getIdPropietario());
+        User ownerUser = userServicePort.getUserById(token, plaza.getIdOwner());
+
+        if(plazaPersistencePort.existsByNit(plaza.getNit())){
+            throw new PlazaAlreadyExistsException();
+        }
 
         if(!adminUser.getIdRole().equals(ADMIN_ROLE_ID)){
             throw new UnauthorizedException();
@@ -33,6 +38,8 @@ public class PlazaUseCase implements IPlazaServicePort {
             throw new InvalidRoleAssignmentException();
         }
 
-        plazaPersistencePort.savePlaza(plaza, adminUser.getId());
+        plaza.setIdOwner(ownerUser.getId());
+
+        plazaPersistencePort.savePlaza(plaza);
     }
 }

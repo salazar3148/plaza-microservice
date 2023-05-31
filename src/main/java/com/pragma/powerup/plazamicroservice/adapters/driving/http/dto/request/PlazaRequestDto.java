@@ -6,9 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class PlazaRequestDto {
     @NotNull
     private Long nit;
@@ -22,5 +24,5 @@ public class PlazaRequestDto {
     @NotBlank
     private String urlLogo;
     @NotNull
-    private Long idPropietario;
+    private Long idOwner;
 }

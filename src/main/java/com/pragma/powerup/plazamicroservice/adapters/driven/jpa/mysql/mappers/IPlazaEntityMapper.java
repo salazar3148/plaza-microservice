@@ -12,6 +12,6 @@ import java.util.List;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IPlazaEntityMapper {
     List<Plaza> toPlazaList(List<PlazaEntity> plazaEntityList);
-    Plaza toPlaza(PlazaEntity roleEntity);
+    Plaza toPlaza(PlazaEntity plazaEntity);
     PlazaEntity toEntity(Plaza plaza);
 }

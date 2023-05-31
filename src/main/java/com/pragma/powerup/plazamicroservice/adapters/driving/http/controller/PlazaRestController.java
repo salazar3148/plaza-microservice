@@ -1,5 +1,6 @@
 package com.pragma.powerup.plazamicroservice.adapters.driving.http.controller;
 
+import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishRequestDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.PlazaRequestDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.handlers.IPlazaHandler;
 import com.pragma.powerup.plazamicroservice.configuration.Constants;
@@ -21,10 +22,11 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/plaza")
+@RequestMapping("/plazas")
 @RequiredArgsConstructor
 public class PlazaRestController {
-    private final IPlazaHandler personHandler;
+
+    private final IPlazaHandler plazaHandler;
 
     @Operation(summary = "Add a new plaza",
             responses = {
@@ -34,7 +36,7 @@ public class PlazaRestController {
                         content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping
     public ResponseEntity<Map<String, String>> savePlaza(@Valid @RequestBody PlazaRequestDto plazaRequestDto, @RequestHeader("Authorization") String token) {
-        personHandler.savePlaza(plazaRequestDto, token);
+        plazaHandler.savePlaza(plazaRequestDto, token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap(Constants.RESPONSE_MESSAGE_KEY, Constants.PLAZA_CREATED_MESSAGE));
     }
