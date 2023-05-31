@@ -1,7 +1,9 @@
 package com.pragma.powerup.plazamicroservice.domain.spi;
 
-import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.dto.UserDto;
+
+import com.pragma.powerup.plazamicroservice.domain.model.User;
 
 public interface IUserServicePort {
-    UserDto getUser(Long id, String token);
+    User getUser(String token);
+    User getUserById(String token, Long id);
 }

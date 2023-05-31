@@ -7,19 +7,19 @@ public class Plaza {
     private String address;
     private String phone;
     private String urlLogo;
-    private Long id_propietario;
+    private Long idPropietario;
 
     public Plaza() {
     }
 
-    public Plaza(Long id, Long nit, String name, String address, String phone, String urlLogo, Long id_propietario) {
+    public Plaza(Long id, Long nit, String name, String address, String phone, String urlLogo, Long idPropietario) {
         this.id = id;
         this.nit = nit;
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.urlLogo = urlLogo;
-        this.id_propietario = id_propietario;
+        this.idPropietario = idPropietario;
     }
 
     public Long getId() {
@@ -70,11 +70,11 @@ public class Plaza {
         this.urlLogo = urlLogo;
     }
 
-    public Long getId_propietario() {
-        return id_propietario;
+    public Long getIdPropietario() {
+        return idPropietario;
     }
 
-    public void setId_propietario(Long id_propietario) {
-        this.id_propietario = id_propietario;
+    public void setIdPropietario(Long idPropietario) {
+        this.idPropietario = idPropietario;
     }
 }

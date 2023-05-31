@@ -4,6 +4,7 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.Pl
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.UserServiceAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.UserFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IPlazaEntityMapper;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IUserMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IPlazaRepository;
 import com.pragma.powerup.plazamicroservice.domain.api.IPlazaServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
@@ -18,14 +19,22 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
     private final IPlazaRepository plazaRepository;
     private final IPlazaEntityMapper plazaEntityMapper;
-    private final UserServiceAdapter userServiceAdapter;
 
+    private final UserFeignClient userFeignClient;
+    private final IUserMapper userMapper;
     @Bean
     public IPlazaPersistencePort plazaPersistencePort() {
         return new PlazaMysqlAdapter(plazaRepository, plazaEntityMapper);
     }
+
+    @Bean
+    public IUserServicePort userServicePort(){
+        return new UserServiceAdapter(userFeignClient, userMapper);
+    }
+
     @Bean
     public IPlazaServicePort plazaServicePort() {
-        return new PlazaUseCase(plazaPersistencePort(), userServiceAdapter);
+        return new PlazaUseCase(plazaPersistencePort(), userServicePort());
     }
+
 }

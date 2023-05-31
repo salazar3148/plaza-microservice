@@ -1,10 +1,14 @@
 package com.pragma.powerup.plazamicroservice.domain.usecase;
-
-import com.pragma.powerup.plazamicroservice.configuration.Constants;
 import com.pragma.powerup.plazamicroservice.domain.api.IPlazaServicePort;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidRoleAssignmentException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
+import com.pragma.powerup.plazamicroservice.domain.model.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
+
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.ADMIN_ROLE_ID;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.OWNER_ROLE_ID;
 
 public class PlazaUseCase implements IPlazaServicePort {
     private final IPlazaPersistencePort plazaPersistencePort;
@@ -16,10 +20,19 @@ public class PlazaUseCase implements IPlazaServicePort {
     }
 
     @Override
-    public void savePlaza(Plaza plaza) {
-        if(userServicePort.getUser(plaza.getId_propietario(),"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTY4NDIyNTAwNSwiZXhwIjoxNjg0ODczMDA1fQ.pYUdu6E1TJSpJ0l79WfQTGcHnADgd3DJflries23LVc").getId_role().getId() != Constants.PROVIDER_ROLE_ID) {
-            throw new RuntimeException("ASDASDA");
+    public void savePlaza(Plaza plaza, String token) {
+
+        User adminUser = userServicePort.getUser(token);
+        User ownerUser = userServicePort.getUserById(token, plaza.getIdPropietario());
+
+        if(!adminUser.getIdRole().equals(ADMIN_ROLE_ID)){
+            throw new UnauthorizedException();
         }
-        plazaPersistencePort.savePlaza(plaza);
+
+        if(!ownerUser.getIdRole().equals(OWNER_ROLE_ID)) {
+            throw new InvalidRoleAssignmentException();
+        }
+
+        plazaPersistencePort.savePlaza(plaza, adminUser.getId());
     }
 }

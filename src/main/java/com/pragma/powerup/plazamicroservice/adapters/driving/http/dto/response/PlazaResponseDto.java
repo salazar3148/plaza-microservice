@@ -12,5 +12,5 @@ public class PlazaResponseDto {
     private String address;
     private String phone;
     private String urlLogo;
-    private Long id_propietario;
+    private Long idPropietario;
 }

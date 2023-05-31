@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class PlazaRestController {
                 @ApiResponse(responseCode = "409", description = "Person already exists",
                         content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping
-    public ResponseEntity<Map<String, String>> savePerson(@RequestBody PlazaRequestDto plazaRequestDto, @RequestHeader("Authorization") String token) {
-        personHandler.savePlaza(plazaRequestDto);
+    public ResponseEntity<Map<String, String>> savePlaza(@Valid @RequestBody PlazaRequestDto plazaRequestDto, @RequestHeader("Authorization") String token) {
+        personHandler.savePlaza(plazaRequestDto, token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap(Constants.RESPONSE_MESSAGE_KEY, Constants.PLAZA_CREATED_MESSAGE));
     }
