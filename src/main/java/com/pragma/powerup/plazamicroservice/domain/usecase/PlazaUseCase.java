@@ -21,8 +21,6 @@ public class PlazaUseCase implements IPlazaServicePort {
 
     @Override
     public void savePlaza(Plaza plaza, String token) {
-
-
         User adminUser = userServicePort.getUser(token);
         User ownerUser = userServicePort.getUserById(token, plaza.getIdOwner());
 

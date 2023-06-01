@@ -47,4 +47,29 @@ public class DishUseCase implements IDishServicePort {
 
         dishPersistencePort.saveDish(dish);
     }
+
+    @Override
+    public void updateDish(String token, Long id, Dish dish) {
+        User owner = userServicePort.getUser(token);
+
+        if(!owner.getIdRole().equals(OWNER_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Dish oldDish = dishPersistencePort.getDish(id);
+
+        if(!plazaPersistencePort.existsByIdOwnerAndId(owner.getId(), oldDish.getPlaza().getId())){
+            throw new UnauthorizedRestaurantAccessException();
+        }
+
+        if(dish.getPrice() != null){
+            oldDish.setPrice(dish.getPrice());
+        }
+
+        if(dish.getDescription() != null){
+            oldDish.setDescription(dish.getDescription());
+        }
+
+        dishPersistencePort.saveDish(oldDish);
+    }
 }

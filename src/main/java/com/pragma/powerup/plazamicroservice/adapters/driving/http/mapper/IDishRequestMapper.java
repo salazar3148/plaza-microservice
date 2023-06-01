@@ -1,5 +1,6 @@
 package com.pragma.powerup.plazamicroservice.adapters.driving.http.mapper;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishRequestDto;
+import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishUpdateRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -13,4 +14,5 @@ public interface IDishRequestMapper {
     @Mapping(source = "idCategory", target = "category.id")
     @Mapping(source = "idPlaza", target = "plaza.id")
     Dish DishRequestDtoToDish(DishRequestDto dishRequestDto);
+    Dish DisUpdateRequesDtoToDish(DishUpdateRequestDto dishUpdateRequestDto);
 }

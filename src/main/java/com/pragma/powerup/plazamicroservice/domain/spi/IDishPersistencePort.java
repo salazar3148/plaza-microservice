@@ -4,4 +4,6 @@ import com.pragma.powerup.plazamicroservice.domain.model.Dish;
 
 public interface IDishPersistencePort {
     void saveDish(Dish dish);
+
+    Dish getDish(Long id);
 }

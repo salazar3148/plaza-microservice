@@ -1,6 +1,7 @@
 package com.pragma.powerup.plazamicroservice.configuration;
 
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.CategoryNotFoundException;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.DishNotFoundException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.MailAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PlazaAlreadyExistsException;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CATEGORY_NOT_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.DISH_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.MAIL_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.NO_DATA_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_ALREADY_EXISTS_MESSAGE;
@@ -78,6 +80,12 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleDomainCategoryNotFoundException(DomainCategoryNotFoundException domainCategoryNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CATEGORY_NOT_FOUND_MESSAGE));
+    }
+
+    @ExceptionHandler(DishNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleDishNotFoundException(DishNotFoundException dishNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, DISH_NOT_FOUND_MESSAGE));
     }
 
     @ExceptionHandler(UnauthorizedRestaurantAccessException.class)

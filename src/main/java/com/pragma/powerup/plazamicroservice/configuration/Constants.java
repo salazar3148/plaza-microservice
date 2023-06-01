@@ -13,6 +13,8 @@ public class Constants {
     public static final String RESPONSE_MESSAGE_KEY = "message";
     public static final String PLAZA_CREATED_MESSAGE = "Restaurant created successfully";
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully";
+
+    public static final String DISH_UPDATED_MESSAGE = "Dish updated successfully";
     public static final String ROLE_ASSIGNMENT_MESSAGE = "role assignment is not allowed";
 
     public static final String RESPONSE_ERROR_MESSAGE_KEY = "error";
@@ -24,6 +26,7 @@ public class Constants {
     public static final String PERSON_NOT_FOUND_MESSAGE = "No person found with the id provided";
     public static final String ROLE_NOT_FOUND_MESSAGE = "No role found with the id provided";
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "No category found with the id provided";
+    public static final String DISH_NOT_FOUND_MESSAGE = "No dish found with the id provided";
     public static final String PLAZA_NOT_FOUND_MESSAGE = "No restaurant found with the id provided";
     public static final String UNAUTHORIZED_RESTAURANT_ACCESS_MESSAGE = "Owner attempted to create a dish in a restaurant they do not own";
     public static final String ROLE_NOT_ALLOWED_MESSAGE = "No permission granted to create users with this role";

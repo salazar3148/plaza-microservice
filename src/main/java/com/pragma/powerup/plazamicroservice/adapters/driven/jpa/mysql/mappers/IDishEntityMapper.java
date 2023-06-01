@@ -10,4 +10,6 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IDishEntityMapper {
     DishEntity dishToDishEntity(Dish dish);
+
+    Dish dishEntityToDish(DishEntity dishEntity);
 }
