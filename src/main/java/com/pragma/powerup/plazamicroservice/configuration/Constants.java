@@ -15,6 +15,8 @@ public class Constants {
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully";
 
     public static final String DISH_UPDATED_MESSAGE = "Dish updated successfully";
+
+    public static final String STATUS_DISH_UPDATED_MESSAGE = "status dish updated successfully";
     public static final String ROLE_ASSIGNMENT_MESSAGE = "role assignment is not allowed";
 
     public static final String RESPONSE_ERROR_MESSAGE_KEY = "error";

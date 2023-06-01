@@ -8,7 +8,7 @@ public interface IPlazaPersistencePort {
     void savePlaza(Plaza plaza);
     Plaza getPlaza(Long id);
     boolean existById(Long id);
-    Boolean existsByNit(Long nit);
-    Boolean existsByIdOwnerAndId(Long idOwner, Long id);
+    boolean existsByNit(Long nit);
+    boolean existsByIdOwnerAndId(Long idOwner, Long id);
 
 }

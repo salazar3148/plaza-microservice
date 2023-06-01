@@ -45,6 +45,7 @@ public class DishUseCase implements IDishServicePort {
             throw new DomainPlazaNotFoundException();
         }
 
+        dish.setStatus(true);
         dishPersistencePort.saveDish(dish);
     }
 
@@ -71,5 +72,24 @@ public class DishUseCase implements IDishServicePort {
         }
 
         dishPersistencePort.saveDish(oldDish);
+    }
+
+    @Override
+    public void updateStatusDish(String token, Long id) {
+        User owner = userServicePort.getUser(token);
+
+        if(!owner.getIdRole().equals(OWNER_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Dish dish = dishPersistencePort.getDish(id);
+
+        if(!plazaPersistencePort.existsByIdOwnerAndId(owner.getId(), dish.getPlaza().getId())){
+            throw new UnauthorizedRestaurantAccessException();
+        }
+
+        dish.setStatus(!dish.getStatus());
+
+        dishPersistencePort.saveDish(dish);
     }
 }

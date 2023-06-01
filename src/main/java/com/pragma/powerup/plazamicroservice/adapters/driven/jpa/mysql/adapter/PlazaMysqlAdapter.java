@@ -31,12 +31,12 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
     }
 
     @Override
-    public Boolean existsByNit(Long nit){
+    public boolean existsByNit(Long nit){
         return plazaRepository.existsByNit(nit);
     }
 
     @Override
-    public Boolean existsByIdOwnerAndId(Long idOwner, Long id) {
+    public boolean existsByIdOwnerAndId(Long idOwner, Long id) {
         return plazaRepository.existsByIdOwnerAndId(idOwner, id);
 
     }

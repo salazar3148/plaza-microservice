@@ -7,4 +7,6 @@ public interface IDishHandler {
     void saveDish(String token, DishRequestDto dishRequestDto);
 
     void updateDish(String token, Long id, DishUpdateRequestDto dishUpdateRequestDto);
+
+    void updateStatusDish(String token, Long id);
 }

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IPlazaRepository extends JpaRepository<PlazaEntity, Long> {
     Optional<PlazaEntity> findById(Long id);
-    Boolean existsByNit(Long nit);
+    boolean existsByNit(Long nit);
     boolean existsById(Long id);
-    Boolean existsByIdOwnerAndId(Long idOwner, Long id);
+    boolean existsByIdOwnerAndId(Long idOwner, Long id);
 }

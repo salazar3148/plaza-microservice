@@ -1,6 +1,5 @@
 package com.pragma.powerup.plazamicroservice.adapters.driving.http.controller;
 
-import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishRequestDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.PlazaRequestDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.handlers.IPlazaHandler;
 import com.pragma.powerup.plazamicroservice.configuration.Constants;
