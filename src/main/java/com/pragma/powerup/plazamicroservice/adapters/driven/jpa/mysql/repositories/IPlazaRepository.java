@@ -1,6 +1,8 @@
 package com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories;
 
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.entity.PlazaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +13,5 @@ public interface IPlazaRepository extends JpaRepository<PlazaEntity, Long> {
     boolean existsByNit(Long nit);
     boolean existsById(Long id);
     boolean existsByIdOwnerAndId(Long idOwner, Long id);
+    Page<PlazaEntity> findAllByOrderByNameAsc(Pageable pageable);
 }

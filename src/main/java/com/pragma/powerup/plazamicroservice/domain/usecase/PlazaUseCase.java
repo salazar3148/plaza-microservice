@@ -7,7 +7,10 @@ import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
 import com.pragma.powerup.plazamicroservice.domain.model.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
+import org.springframework.data.domain.Page;
+
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ADMIN_ROLE_ID;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_ROLE_ID;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.OWNER_ROLE_ID;
 
 public class PlazaUseCase implements IPlazaServicePort {
@@ -39,5 +42,17 @@ public class PlazaUseCase implements IPlazaServicePort {
         plaza.setIdOwner(ownerUser.getId());
 
         plazaPersistencePort.savePlaza(plaza);
+    }
+
+    @Override
+    public Page<Plaza> getAllPlazaFilter(String token, int minPage, int sizePage) {
+
+        User customerUser = userServicePort.getUser(token);
+
+        if(!customerUser.getIdRole().equals(CUSTOMER_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        return plazaPersistencePort.getPlazaList(minPage, sizePage);
     }
 }

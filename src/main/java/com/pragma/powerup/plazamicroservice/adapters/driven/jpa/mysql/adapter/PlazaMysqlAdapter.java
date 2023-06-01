@@ -5,6 +5,9 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositori
 import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class PlazaMysqlAdapter implements IPlazaPersistencePort {
@@ -25,6 +28,13 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
                 plazaRepository.findById(id).orElseThrow()
         );
     }
+
+    @Override
+    public Page<Plaza> getPlazaList(int minPage, int sizePage) {
+        Pageable pageable = PageRequest.of(minPage, sizePage);
+        return plazaEntityMapper.getPlazaEntityPageToPlazaPage(plazaRepository.findAllByOrderByNameAsc(pageable));
+    }
+
     @Override
     public boolean existById(Long id) {
         return plazaRepository.existsById(id);
@@ -38,6 +48,5 @@ public class PlazaMysqlAdapter implements IPlazaPersistencePort {
     @Override
     public boolean existsByIdOwnerAndId(Long idOwner, Long id) {
         return plazaRepository.existsByIdOwnerAndId(idOwner, id);
-
     }
 }

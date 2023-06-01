@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page;
 public interface IPlazaHandler {
     void savePlaza(PlazaRequestDto personRequestDto, String token);
 
-    Page<PlazaResponseDto> getAllPlazaFilter(Integer pageNumber, Integer pageSize);
+    Page<PlazaResponseDto> getAllPlazaFilter(String token, Integer pageNumber, Integer pageSize);
 }

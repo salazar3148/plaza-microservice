@@ -45,8 +45,8 @@ public class PlazaRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PlazaResponseDto>> getAllPlazaFilter(@RequestParam Integer minPage, @RequestParam Integer sizePage) {
+    public ResponseEntity<Page<PlazaResponseDto>> getAllPlazaFilter(@RequestHeader("Authorization") String token, @RequestParam Integer minPage, @RequestParam Integer sizePage) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(plazaHandler.getAllPlazaFilter(minPage, sizePage));
+                .body(plazaHandler.getAllPlazaFilter(token, minPage, sizePage));
     }
 }
