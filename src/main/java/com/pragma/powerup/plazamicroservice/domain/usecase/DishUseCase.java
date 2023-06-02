@@ -10,6 +10,9 @@ import com.pragma.powerup.plazamicroservice.domain.spi.ICategoryPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IDishPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
+import org.springframework.data.domain.Page;
+
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_ROLE_ID;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.OWNER_ROLE_ID;
 
 public class DishUseCase implements IDishServicePort {
@@ -91,5 +94,16 @@ public class DishUseCase implements IDishServicePort {
         dish.setStatus(!dish.getStatus());
 
         dishPersistencePort.saveDish(dish);
+    }
+
+    @Override
+    public Page<Dish> getPageDish(String token, String categoryName, Integer numPage, Integer sizePage) {
+        User customerUser = userServicePort.getUser(token);
+
+        if(!customerUser.getIdRole().equals(CUSTOMER_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        return dishPersistencePort.getDishPage(categoryName, numPage, sizePage);
     }
 }

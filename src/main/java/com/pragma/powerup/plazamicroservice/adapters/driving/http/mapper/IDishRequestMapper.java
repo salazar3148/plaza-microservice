@@ -13,6 +13,8 @@ public interface IDishRequestMapper {
 
     @Mapping(source = "idCategory", target = "category.id")
     @Mapping(source = "idPlaza", target = "plaza.id")
-    Dish DishRequestDtoToDish(DishRequestDto dishRequestDto);
-    Dish DisUpdateRequesDtoToDish(DishUpdateRequestDto dishUpdateRequestDto);
+    Dish dishRequestDtoToDish(DishRequestDto dishRequestDto);
+    Dish disUpdateRequesDtoToDish(DishUpdateRequestDto dishUpdateRequestDto);
+
+
 }

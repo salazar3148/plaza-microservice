@@ -6,6 +6,9 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositori
 import com.pragma.powerup.plazamicroservice.domain.model.Dish;
 import com.pragma.powerup.plazamicroservice.domain.spi.IDishPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class DishMySqlAdapter implements IDishPersistencePort {
@@ -24,6 +27,14 @@ public class DishMySqlAdapter implements IDishPersistencePort {
     public Dish getDish(Long id) {
         return dishEntityMapper.dishEntityToDish(
                 dishRepository.findById(id).orElseThrow(DishNotFoundException::new)
+        );
+    }
+
+    @Override
+    public Page<Dish> getDishPage(String categoryName, Integer numPage, Integer sizePage) {
+        Pageable pageable = PageRequest.of(numPage, sizePage);
+        return dishEntityMapper.dishPageEntityToDishPage(
+            dishRepository.findAllByCategoryNameAndStatus(categoryName,true, pageable)
         );
     }
 }

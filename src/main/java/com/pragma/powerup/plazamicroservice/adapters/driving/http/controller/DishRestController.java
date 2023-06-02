@@ -2,6 +2,7 @@ package com.pragma.powerup.plazamicroservice.adapters.driving.http.controller;
 
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishRequestDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.request.DishUpdateRequestDto;
+import com.pragma.powerup.plazamicroservice.adapters.driving.http.dto.response.DishResponseDto;
 import com.pragma.powerup.plazamicroservice.adapters.driving.http.handlers.impl.DishHandlerImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,14 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
@@ -51,12 +55,22 @@ public class DishRestController {
             responses = {
                     @ApiResponse(responseCode = "201", description = "Plaza created",
                             content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map"))),
-                    @ApiResponse(responseCode = "409", description = "Person already exists",
+                    @ApiResponse(responseCode = "404", description = "Dish not found",
                             content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
     @PatchMapping("/status/{id}")
     public ResponseEntity<Map<String, String>> updateDish(@RequestHeader("Authorization") String token, @PathVariable Long id) {
         dishHandler.updateStatusDish(token, id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, STATUS_DISH_UPDATED_MESSAGE));
+    }
+    @Operation(summary = "get dish page by category name",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Plaza created",
+                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map")))
+            })
+    @GetMapping
+    public ResponseEntity<Page<DishResponseDto>> getDishPageByCategoryName(@RequestHeader("Authorization") String token, @RequestParam String categoryName, @RequestParam Integer numPage, @RequestParam Integer sizePage) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(dishHandler.getPageDishResponseDto(token, categoryName, numPage, sizePage));
     }
 }
