@@ -4,6 +4,7 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.DishNotFoundException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.MailAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PlazaAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.PersonNotFoundException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.PlazaNotFoundException;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CATEGORY_NOT_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_WITH_PENDING_ORDER_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.DISH_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.MAIL_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.NO_DATA_FOUND_MESSAGE;
@@ -76,6 +78,13 @@ public class ControllerAdvisor {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, PLAZA_NOT_FOUND_MESSAGE));
     }
+
+    @ExceptionHandler(PendingOrderException.class)
+    public ResponseEntity<Map<String, String>> handlePendingOrderException(PendingOrderException pendingOrderException) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CUSTOMER_WITH_PENDING_ORDER_MESSAGE));
+    }
+
     @ExceptionHandler(DomainCategoryNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleDomainCategoryNotFoundException(DomainCategoryNotFoundException domainCategoryNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -98,8 +107,7 @@ public class ControllerAdvisor {
     public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
         List<String> errorMessages = new ArrayList<>();
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
+            if (error instanceof FieldError fieldError) {
                 errorMessages.add(fieldError.getField() + ": " + fieldError.getDefaultMessage());
             } else {
                 errorMessages.add(error.getDefaultMessage());
@@ -107,6 +115,7 @@ public class ControllerAdvisor {
         }
         return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
     }
+
 
 
 

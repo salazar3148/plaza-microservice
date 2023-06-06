@@ -16,10 +16,10 @@ import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTO
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.OWNER_ROLE_ID;
 
 public class DishUseCase implements IDishServicePort {
-    IDishPersistencePort dishPersistencePort;
-    ICategoryPersistencePort categoryPersistencePort;
-    IPlazaPersistencePort plazaPersistencePort;
-    IUserServicePort userServicePort;
+    private final IDishPersistencePort dishPersistencePort;
+    private final ICategoryPersistencePort categoryPersistencePort;
+    private final IPlazaPersistencePort plazaPersistencePort;
+    private final IUserServicePort userServicePort;
 
     public DishUseCase(IDishPersistencePort dishPersistencePort, ICategoryPersistencePort categoryPersistencePort, IPlazaPersistencePort plazaPersistencePort, IUserServicePort userServicePort) {
         this.dishPersistencePort = dishPersistencePort;

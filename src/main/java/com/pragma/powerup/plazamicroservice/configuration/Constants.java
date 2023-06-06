@@ -1,10 +1,18 @@
 package com.pragma.powerup.plazamicroservice.configuration;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Constants {
 
     private Constants() {
         throw new IllegalStateException("Utility class");
     }
+
+    public static final List<String> ORDER_STATUSES = Collections.unmodifiableList(
+            Arrays.asList("PENDING", "IN PREPARATION", "DONE")
+    );
 
     public static final Long ADMIN_ROLE_ID = 1L;
     public static final Long CUSTOMER_ROLE_ID = 2L;
@@ -13,6 +21,10 @@ public class Constants {
     public static final String RESPONSE_MESSAGE_KEY = "message";
     public static final String PLAZA_CREATED_MESSAGE = "Restaurant created successfully";
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully";
+
+    public static final String ORDER_CREATED_MESSAGE = "Order successfully created in pending status";
+
+    public static final String CUSTOMER_WITH_PENDING_ORDER_MESSAGE = "A pending, in preparation, or completed order already exists for this customer. Please resolve the existing order before creating a new one";
 
     public static final String DISH_UPDATED_MESSAGE = "Dish updated successfully";
 
