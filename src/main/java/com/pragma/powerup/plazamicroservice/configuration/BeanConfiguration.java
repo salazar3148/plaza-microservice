@@ -2,6 +2,7 @@ package com.pragma.powerup.plazamicroservice.configuration;
 
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.CategoryMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.DishMySqlAdapter;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.EmployeeRestaurantMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.OrderDetailsMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.OrderMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.PlazaMysqlAdapter;
@@ -15,6 +16,7 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IP
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IUserMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.ICategoryRepository;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IDishRepository;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IEmployeeRestaurantRepository;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IOrderDetailsRepository;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IOrderRepository;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IPlazaRepository;
@@ -23,6 +25,7 @@ import com.pragma.powerup.plazamicroservice.domain.api.IOrderServicePort;
 import com.pragma.powerup.plazamicroservice.domain.api.IPlazaServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.ICategoryPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IDishPersistencePort;
+import com.pragma.powerup.plazamicroservice.domain.spi.IEmployeeRestaurantPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderDetailsPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
@@ -52,6 +55,8 @@ public class BeanConfiguration {
     private final IOrderDetailsRepository orderDetailsRepository;
     private final IOrderDetailsEntityMapper orderDetailsEntityMapper;
 
+    private final IEmployeeRestaurantRepository employeeRestaurantRepository;
+
     private final UserFeignClient userFeignClient;
     private final IUserMapper userMapper;
     @Bean
@@ -80,8 +85,13 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort(){
+        return new EmployeeRestaurantMySqlAdapter(employeeRestaurantRepository);
+    }
+
+    @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), userServicePort());
+        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), employeeRestaurantPersistencePort(), userServicePort());
     }
     @Bean
     public IUserServicePort userServicePort(){

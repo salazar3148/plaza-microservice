@@ -2,6 +2,7 @@ package com.pragma.powerup.plazamicroservice.configuration;
 
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.CategoryNotFoundException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.DishNotFoundException;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.EmployeeNotAssignedToRestaurantException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.MailAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
@@ -32,6 +33,7 @@ import java.util.Map;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CATEGORY_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_WITH_PENDING_ORDER_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.DISH_NOT_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.MAIL_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.NO_DATA_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_ALREADY_EXISTS_MESSAGE;
@@ -101,6 +103,12 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleUnauthorizedRestaurantAccessException(UnauthorizedRestaurantAccessException unauthorizedRestaurantAccessException) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, UNAUTHORIZED_RESTAURANT_ACCESS_MESSAGE));
+    }
+
+    @ExceptionHandler(EmployeeNotAssignedToRestaurantException.class)
+    public ResponseEntity<Map<String, String>> handleEmployeeNotAssignedToRestaurantException(EmployeeNotAssignedToRestaurantException employeeNotAssignedToRestaurantException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

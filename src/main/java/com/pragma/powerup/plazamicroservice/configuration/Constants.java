@@ -17,20 +17,17 @@ public class Constants {
     public static final Long ADMIN_ROLE_ID = 1L;
     public static final Long CUSTOMER_ROLE_ID = 2L;
     public static final Long OWNER_ROLE_ID = 3L;
+    public static final Long EMPLOYEE_ROLE_ID = 4L;
     public static final int MAX_PAGE_SIZE = 2;
     public static final String RESPONSE_MESSAGE_KEY = "message";
     public static final String PLAZA_CREATED_MESSAGE = "Restaurant created successfully";
     public static final String DISH_CREATED_MESSAGE = "Dish created successfully";
-
     public static final String ORDER_CREATED_MESSAGE = "Order successfully created in pending status";
-
     public static final String CUSTOMER_WITH_PENDING_ORDER_MESSAGE = "A pending, in preparation, or completed order already exists for this customer. Please resolve the existing order before creating a new one";
-
+    public static final String EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE = "Employee is not assigned to any restaurant.";
     public static final String DISH_UPDATED_MESSAGE = "Dish updated successfully";
-
     public static final String STATUS_DISH_UPDATED_MESSAGE = "status dish updated successfully";
     public static final String ROLE_ASSIGNMENT_MESSAGE = "role assignment is not allowed";
-
     public static final String RESPONSE_ERROR_MESSAGE_KEY = "error";
     public static final String WRONG_CREDENTIALS_MESSAGE = "Wrong credentials or role not allowed";
     public static final String NO_DATA_FOUND_MESSAGE = "No data found for the requested petition";
