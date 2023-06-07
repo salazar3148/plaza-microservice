@@ -5,6 +5,9 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.EmployeeNotAssignedToRestaurantException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.MailAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.NoDataFoundException;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.OrderNotFoundException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidStateTransitionException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.OrderIsNotInPendingStatusException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PlazaAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.PersonNotFoundException;
@@ -34,8 +37,10 @@ import static com.pragma.powerup.plazamicroservice.configuration.Constants.CATEG
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_WITH_PENDING_ORDER_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.DISH_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.INVALID_STATE_TRANSITION_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.MAIL_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.NO_DATA_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PERSON_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_NOT_FOUND_MESSAGE;
@@ -75,10 +80,28 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, CATEGORY_NOT_FOUND_MESSAGE));
     }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCategoryNotFoundException(OrderNotFoundException orderNotFoundException) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, ORDER_NOT_FOUND_MESSAGE));
+    }
+
     @ExceptionHandler(DomainPlazaNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleDomainPlazaNotFoundException(DomainPlazaNotFoundException domainPlazaNotFoundException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, PLAZA_NOT_FOUND_MESSAGE));
+    }
+
+    @ExceptionHandler(InvalidStateTransitionException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidStateTransitionException(InvalidStateTransitionException invalidStateTransitionException) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY,  INVALID_STATE_TRANSITION_MESSAGE));
+    }
+
+    @ExceptionHandler(OrderIsNotInPendingStatusException.class)
+    public ResponseEntity<Map<String, String>> handleOrderIsNotInPendingStatusException(OrderIsNotInPendingStatusException orderIsNotInPendingStatusException) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY,  INVALID_STATE_TRANSITION_MESSAGE));
     }
 
     @ExceptionHandler(PendingOrderException.class)
@@ -123,9 +146,6 @@ public class ControllerAdvisor {
         }
         return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
     }
-
-
-
 
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoDataFoundException(NoDataFoundException noDataFoundException) {

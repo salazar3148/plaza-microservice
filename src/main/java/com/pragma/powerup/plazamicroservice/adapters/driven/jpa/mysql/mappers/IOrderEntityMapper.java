@@ -34,7 +34,7 @@ public interface IOrderEntityMapper {
         switch (status.toUpperCase()) {
             case "PENDING":
                 return new PendingState();
-            case "In PREPARATION":
+            case "IN PREPARATION":
                 return new InPreparationState();
             case "DONE":
                 return new DoneState();

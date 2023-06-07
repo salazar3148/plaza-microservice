@@ -1,5 +1,6 @@
 package com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.entity.OrderEntity;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.exceptions.OrderNotFoundException;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IOrderEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IOrderRepository;
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
@@ -18,11 +19,19 @@ public class OrderMySqlAdapter implements IOrderPersistencePort {
     private final IOrderEntityMapper orderEntityMapper;
     @Override
     public Long createOrderAndGetId(Order order) {
+
         OrderEntity orderEntity = orderEntityMapper.orderToOrderEntity(order);
         orderRepository.save(
                 orderEntity
         );
         return orderEntity.getId();
+    }
+
+    @Override
+    public void saveOrder(Order order) {
+        orderRepository.save(
+                orderEntityMapper.orderToOrderEntity(order)
+        );
     }
 
     @Override
@@ -37,10 +46,17 @@ public class OrderMySqlAdapter implements IOrderPersistencePort {
     }
 
     @Override
-    public Page<Order> getOrdersByStatus(int numPage, int sizePage, Long restaurantId, String status) {
+    public Page<Order> getOrderPageByStatus(int numPage, int sizePage, Long restaurantId, String status) {
         Pageable pageable = PageRequest.of(numPage, sizePage);
         return orderEntityMapper.orderEntityPageToOrderPage(
                 orderRepository.findAllByRestaurantIdAndStatus(restaurantId, status, pageable)
+        );
+    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        return orderEntityMapper.orderEntityToOrder(
+                orderRepository.findById(id).orElseThrow(OrderNotFoundException::new)
         );
     }
 }

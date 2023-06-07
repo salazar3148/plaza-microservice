@@ -38,4 +38,9 @@ public class OrderHandlerImpl implements IOrderHandler {
                 orderServicePort.getOrdersByStatus(token, numPage, sizePage, status)
         );
     }
+
+    @Override
+    public void assignEmployeeToOrder(String token, Long orderId) {
+        orderServicePort.assignEmployeeToOrder(token, orderId);
+    }
 }

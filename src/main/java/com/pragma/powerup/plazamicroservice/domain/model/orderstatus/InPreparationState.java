@@ -2,13 +2,8 @@ package com.pragma.powerup.plazamicroservice.domain.model.orderstatus;
 
 public class InPreparationState implements OrderStatus{
     @Override
-    public void nextState() {
-
-    }
-
-    @Override
-    public void prev() {
-
+    public OrderStatus nextState() {
+        return new DeliveredState();
     }
 
     @Override

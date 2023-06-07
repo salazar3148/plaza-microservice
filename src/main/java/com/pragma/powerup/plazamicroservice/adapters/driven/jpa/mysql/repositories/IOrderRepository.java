@@ -5,8 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface IOrderRepository extends JpaRepository<OrderEntity, Long> {
     boolean existsById(Long id);
     boolean existsByStatusAndIdCustomer(String status, Long idCustomer);
     Page<OrderEntity> findAllByRestaurantIdAndStatus(Long restaurantId, String status, Pageable pageable);
+
+    Optional<OrderEntity> findById(Long id);
 }

@@ -1,7 +1,9 @@
 package com.pragma.powerup.plazamicroservice.domain.usecase;
 import com.pragma.powerup.plazamicroservice.domain.api.IOrderServicePort;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.OrderIsNotInPendingStatusException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
 import com.pragma.powerup.plazamicroservice.domain.model.OrderDetails;
 import com.pragma.powerup.plazamicroservice.domain.model.User;
@@ -74,6 +76,40 @@ public class OrderUseCase implements IOrderServicePort {
 
         Long restaurantId = employeeRestaurantPersistencePort.findRestaurantIdByEmployeeId(employeeUser.getId());
 
-        return orderPersistencePort.getOrdersByStatus(numPage, sizePage, restaurantId, status);
+        return orderPersistencePort.getOrderPageByStatus(numPage, sizePage, restaurantId, status);
+    }
+
+    @Override
+    public void assignEmployeeToOrder(String token, Long orderId) {
+
+        User employeeUser = userServicePort.getUser(token);
+
+        if(!employeeUser.getIdRole().equals(EMPLOYEE_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Order order = orderPersistencePort.getOrderById(orderId);
+
+        if (!order.getRestaurant().getId()
+                .equals(
+                        employeeRestaurantPersistencePort.findRestaurantIdByEmployeeId(employeeUser.getId()
+                        )
+                )) {
+            throw new UnauthorizedRestaurantAccessException();
+        }
+
+        if(!(order.getStatus() instanceof PendingState)){
+            throw new OrderIsNotInPendingStatusException();
+        }
+
+        order.setIdChef(
+                employeeUser.getId()
+        );
+
+        order.setStatus(
+                order.getStatus().nextState()
+        );
+
+        orderPersistencePort.saveOrder(order);
     }
 }

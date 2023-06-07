@@ -7,4 +7,6 @@ import org.springframework.data.domain.Page;
 public interface IOrderHandler {
     void createOrder(String token, OrderRequestDto orderRequestDto);
     Page<OrderResponseDto> getOrdersByStatus(String token, int numPage, int sizePage, String status);
+
+    void assignEmployeeToOrder(String token, Long orderId);
 }

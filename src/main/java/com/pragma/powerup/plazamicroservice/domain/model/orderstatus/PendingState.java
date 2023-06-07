@@ -2,17 +2,14 @@ package com.pragma.powerup.plazamicroservice.domain.model.orderstatus;
 
 public class PendingState implements OrderStatus{
     @Override
-    public void nextState() {
-
-    }
-
-    @Override
-    public void prev() {
-
+    public OrderStatus nextState() {
+        return new InPreparationState();
     }
 
     @Override
     public String getToTable() {
         return "PENDING";
     }
+
+
 }
