@@ -22,6 +22,7 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidRoleAssignm
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedOrderAccessException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.VerificationCodeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -55,6 +56,7 @@ import static com.pragma.powerup.plazamicroservice.configuration.Constants.UNAUT
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_NO_ACCESS_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.VERIFICATION_CODE_MISMATCH_MESSAGE;
 
 @ControllerAdvice
 public class ControllerAdvisor {
@@ -141,6 +143,12 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleEmployeeNotAssignedToRestaurantException(EmployeeNotAssignedToRestaurantException employeeNotAssignedToRestaurantException) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE));
+    }
+
+    @ExceptionHandler(VerificationCodeMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleVerificationCodeMismatchException(VerificationCodeMismatchException verificationCodeMismatchException) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, VERIFICATION_CODE_MISMATCH_MESSAGE));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

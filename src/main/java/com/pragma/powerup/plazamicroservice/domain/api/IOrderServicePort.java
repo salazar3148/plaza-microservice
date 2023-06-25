@@ -12,4 +12,5 @@ public interface IOrderServicePort {
     void assignEmployeeToOrder(String token, Long orderId);
     void notifyUserOrderDone(String token, Long orderId);
     void cancelOrder(String token, Long orderId);
+    void deliverOrder(String token, Long orderId, String code);
 }

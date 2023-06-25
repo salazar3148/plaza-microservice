@@ -1,13 +1,16 @@
 package com.pragma.powerup.plazamicroservice.domain.usecase;
 import com.pragma.powerup.plazamicroservice.domain.api.IOrderServicePort;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidStateTransitionException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.OrderIsNotInPendingStatusException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedOrderAccessException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.VerificationCodeMismatchException;
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
 import com.pragma.powerup.plazamicroservice.domain.model.OrderDetails;
 import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.DoneState;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.InPreparationState;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.PendingState;
 import com.pragma.powerup.plazamicroservice.domain.spi.IEmployeeRestaurantPersistencePort;
@@ -174,6 +177,39 @@ public class OrderUseCase implements IOrderServicePort {
 
         order.setStatus(
                 order.getStatus().cancel()
+        );
+
+        orderPersistencePort.saveOrder(order);
+    }
+
+    @Override
+    public void deliverOrder(String token, Long orderId, String code) {
+        User employeeUser = userServicePort.getUser(token);
+
+        if(!employeeUser.getIdRole().equals(EMPLOYEE_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Order order = orderPersistencePort.getOrderById(orderId);
+
+        if (!order.getRestaurant().getId()
+                .equals(
+                        employeeRestaurantPersistencePort.findRestaurantIdByEmployeeId(employeeUser.getId()
+                        )
+                )) {
+            throw new UnauthorizedRestaurantAccessException();
+        }
+
+        if(!(order.getStatus() instanceof DoneState)){
+            throw new InvalidStateTransitionException();
+        }
+
+        if(!order.getVerificationCode().equals(code)){
+            throw new VerificationCodeMismatchException();
+        }
+
+        order.setStatus(
+                order.getStatus().nextState()
         );
 
         orderPersistencePort.saveOrder(order);

@@ -26,6 +26,7 @@ public class Constants {
     public static final String ORDER_IS_NOT_IN_PENDING_STATUS_MESSAGE= "the order must be in pending status to do this action";
     public static final String CUSTOMER_WITH_PENDING_ORDER_MESSAGE = "A pending, in preparation, or completed order already exists for this customer. Please resolve the existing order before creating a new one";
     public static final String EMPLOYEE_NOT_ASSIGNED_TO_RESTAURANT_MESSAGE = "Employee is not assigned to any restaurant.";
+    public static final String VERIFICATION_CODE_MISMATCH_MESSAGE = "The verification code provided does not match the authentication code.";
     public static final String DISH_UPDATED_MESSAGE = "Dish updated successfully";
     public static final String STATUS_DISH_UPDATED_MESSAGE = "status dish updated successfully";
     public static final String EMPLOYEE_ASSIGMENT_SUCCESSFULLY_MESSAGE = "employee successfully assigned to the order";

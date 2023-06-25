@@ -97,4 +97,17 @@ public class OrderRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, ORDER_CANCELED_MESSAGE));
     }
+
+    @Operation(summary = "deliver a order",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "order delivered successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "404", description = "Order not found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
+    @PatchMapping("/{orderId}/deliver/{verificationCode}")
+    public ResponseEntity<Map<String, String>> deliverOrder(@RequestHeader("Authorization") String token, @PathVariable Long orderId, @PathVariable Long verificationCode) {
+        orderHandler.deliverOrder(token, orderId, String.format("%06d", verificationCode));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, ORDER_CANCELED_MESSAGE));
+    }
 }
