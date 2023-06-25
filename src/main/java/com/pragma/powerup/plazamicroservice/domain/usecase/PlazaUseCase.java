@@ -4,7 +4,7 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidRoleAssignm
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PlazaAlreadyExistsException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.model.Plaza;
-import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.user.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import org.springframework.data.domain.Page;

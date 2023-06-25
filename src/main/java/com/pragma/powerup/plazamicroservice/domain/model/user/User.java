@@ -1,17 +1,20 @@
-package com.pragma.powerup.plazamicroservice.domain.model;
+package com.pragma.powerup.plazamicroservice.domain.model.user;
 
 public class User {
     private Long id;
     private Long idRole;
     private String phone;
 
+    private String mail;
+
     public User() {
     }
 
-    public User(Long id, Long idRole, String phone) {
+    public User(Long id, Long idRole, String phone, String mail) {
         this.id = id;
         this.idRole = idRole;
         this.phone = phone;
+        this.mail = mail;
     }
 
     public Long getId() {
@@ -36,5 +39,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 }

@@ -2,10 +2,9 @@ package com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter;
 
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.UserFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IUserMapper;
-import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.user.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 public class UserServiceAdapter implements IUserServicePort {

@@ -5,7 +5,7 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.DomainPlazaNotFoun
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
 import com.pragma.powerup.plazamicroservice.domain.model.Dish;
-import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.user.User;
 import com.pragma.powerup.plazamicroservice.domain.spi.ICategoryPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IDishPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;

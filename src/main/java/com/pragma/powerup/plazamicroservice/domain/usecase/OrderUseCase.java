@@ -9,7 +9,8 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestau
 import com.pragma.powerup.plazamicroservice.domain.exceptions.VerificationCodeMismatchException;
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
 import com.pragma.powerup.plazamicroservice.domain.model.OrderDetails;
-import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.traceability.Traceability;
+import com.pragma.powerup.plazamicroservice.domain.model.user.User;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.DoneState;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.InPreparationState;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.PendingState;
@@ -17,9 +18,11 @@ import com.pragma.powerup.plazamicroservice.domain.spi.IEmployeeRestaurantPersis
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderDetailsPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.ISmsServicePort;
+import com.pragma.powerup.plazamicroservice.domain.spi.ITraceabilityServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import org.springframework.data.domain.Page;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.CUSTOMER_ROLE_ID;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLOYEE_ROLE_ID;
@@ -31,13 +34,15 @@ public class OrderUseCase implements IOrderServicePort {
     private final IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
     private final IUserServicePort userServicePort;
     private final ISmsServicePort smsServicePort;
+    private final ITraceabilityServicePort traceabilityServicePort;
 
-    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDetailsPersistencePort orderDetailsPersistencePort, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort, IUserServicePort userServicePort, ISmsServicePort smsServicePort) {
+    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDetailsPersistencePort orderDetailsPersistencePort, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort, IUserServicePort userServicePort, ISmsServicePort smsServicePort, ITraceabilityServicePort traceabilityServicePort) {
         this.orderPersistencePort = orderPersistencePort;
         this.orderDetailsPersistencePort = orderDetailsPersistencePort;
         this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
         this.userServicePort = userServicePort;
         this.smsServicePort = smsServicePort;
+        this.traceabilityServicePort = traceabilityServicePort;
     }
 
     @Override
@@ -68,6 +73,14 @@ public class OrderUseCase implements IOrderServicePort {
                     orderDetail.setOrder(order);
                     orderDetailsPersistencePort.saveOrderDetail(orderDetail);
                 }
+        );
+
+        generateTraceability(
+                order,
+                customerUser,
+                new User(),
+                null,
+                order.getStatus().getToTable()
         );
     }
 
@@ -108,8 +121,18 @@ public class OrderUseCase implements IOrderServicePort {
             throw new OrderIsNotInPendingStatusException();
         }
 
+        User customerUser = userServicePort.getUserById(token, order.getIdCustomer());
+
         order.setIdChef(
                 employeeUser.getId()
+        );
+
+        generateTraceability(
+                order,
+                customerUser,
+                employeeUser,
+                order.getStatus().getToTable(),
+                order.getStatus().nextState().getToTable()
         );
 
         order.setStatus(
@@ -151,6 +174,14 @@ public class OrderUseCase implements IOrderServicePort {
 
         order.setVerificationCode(verificationCode);
 
+        generateTraceability(
+                order,
+                customerUser,
+                employeeUser,
+                order.getStatus().getToTable(),
+                order.getStatus().nextState().getToTable()
+        );
+
         order.setStatus(
                 order.getStatus().nextState()
         );
@@ -174,6 +205,14 @@ public class OrderUseCase implements IOrderServicePort {
         if(!(order.getStatus() instanceof PendingState)) {
             throw new OrderIsNotInPendingStatusException();
         }
+
+        generateTraceability(
+                order,
+                customerUser,
+                new User(),
+                order.getStatus().getToTable(),
+                order.getStatus().cancel().getToTable()
+        );
 
         order.setStatus(
                 order.getStatus().cancel()
@@ -208,10 +247,35 @@ public class OrderUseCase implements IOrderServicePort {
             throw new VerificationCodeMismatchException();
         }
 
+        User customerUser = userServicePort.getUserById(token, order.getIdCustomer());
+
+        generateTraceability(
+                order,
+                customerUser,
+                employeeUser,
+                order.getStatus().getToTable(),
+                order.getStatus().nextState().getToTable()
+        );
+
         order.setStatus(
                 order.getStatus().nextState()
         );
 
         orderPersistencePort.saveOrder(order);
+    }
+
+    public void generateTraceability(Order order, User customerUser, User employeeUser, String oldStatus, String newStatus) {
+        Traceability traceability = new Traceability(
+                order.getId(),
+                customerUser.getId(),
+                customerUser.getMail(),
+                LocalDateTime.now(),
+                oldStatus,
+                newStatus,
+                employeeUser.getId(),
+                employeeUser.getMail()
+        );
+
+        traceabilityServicePort.saveTraceability(traceability);
     }
 }

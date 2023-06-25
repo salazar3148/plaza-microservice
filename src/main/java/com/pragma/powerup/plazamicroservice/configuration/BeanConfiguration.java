@@ -7,14 +7,17 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.Or
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.OrderMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.PlazaMysqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.SmsServiceAdapter;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.TraceabilityServiceAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.UserServiceAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.MessagingFeignClient;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.TraceabilityFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.UserFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.ICategoryEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IDishEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IOrderDetailsEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IOrderEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IPlazaEntityMapper;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.ITraceabilityRequestMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IUserMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.ICategoryRepository;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.repositories.IDishRepository;
@@ -32,6 +35,7 @@ import com.pragma.powerup.plazamicroservice.domain.spi.IOrderDetailsPersistenceP
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.ISmsServicePort;
+import com.pragma.powerup.plazamicroservice.domain.spi.ITraceabilityServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import com.pragma.powerup.plazamicroservice.domain.usecase.DishUseCase;
 import com.pragma.powerup.plazamicroservice.domain.usecase.OrderUseCase;
@@ -65,6 +69,9 @@ public class BeanConfiguration {
 
     private final MessagingFeignClient messagingFeignClient;
 
+    private final TraceabilityFeignClient traceabilityFeignClient;
+    private final ITraceabilityRequestMapper traceabilityRequestMapper;
+
     @Bean
     public IPlazaPersistencePort plazaPersistencePort() {
         return new PlazaMysqlAdapter(plazaRepository, plazaEntityMapper);
@@ -97,7 +104,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), employeeRestaurantPersistencePort(), userServicePort(), smsServicePort());
+        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), employeeRestaurantPersistencePort(), userServicePort(), smsServicePort(), traceabilityServicePort());
     }
     @Bean
     public IUserServicePort userServicePort(){
@@ -109,6 +116,10 @@ public class BeanConfiguration {
         return new SmsServiceAdapter(messagingFeignClient);
     }
 
+    @Bean
+    public ITraceabilityServicePort traceabilityServicePort() {
+        return new TraceabilityServiceAdapter(traceabilityFeignClient, traceabilityRequestMapper);
+    }
     @Bean
     public IPlazaServicePort plazaServicePort() {
         return new PlazaUseCase(plazaPersistencePort(), userServicePort());
