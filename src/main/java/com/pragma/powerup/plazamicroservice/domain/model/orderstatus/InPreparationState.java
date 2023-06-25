@@ -5,7 +5,6 @@ public class InPreparationState implements OrderStatus{
     public OrderStatus nextState() {
         return new DoneState();
     }
-
     @Override
     public String getToTable() {
         return "IN PREPARATION";

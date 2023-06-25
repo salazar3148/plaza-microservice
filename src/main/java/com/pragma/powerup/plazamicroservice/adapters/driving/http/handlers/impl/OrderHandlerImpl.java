@@ -48,4 +48,9 @@ public class OrderHandlerImpl implements IOrderHandler {
     public void notifyUserOrderDone(String token, Long orderId) {
         orderServicePort.notifyUserOrderDone(token, orderId);
     }
+
+    @Override
+    public void cancelOrder(String token, Long orderId) {
+        orderServicePort.cancelOrder(token, orderId);
+    }
 }

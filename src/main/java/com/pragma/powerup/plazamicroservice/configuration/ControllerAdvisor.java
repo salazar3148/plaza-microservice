@@ -20,6 +20,7 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.DomainCategoryNotF
 import com.pragma.powerup.plazamicroservice.domain.exceptions.DomainPlazaNotFoundException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.InvalidRoleAssignmentException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedOrderAccessException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ import static com.pragma.powerup.plazamicroservice.configuration.Constants.RESPO
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ROLE_ASSIGNMENT_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ROLE_NOT_ALLOWED_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ROLE_NOT_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.UNAUTHORIZED_ORDER_ACCESS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.UNAUTHORIZED_RESTAURANT_ACCESS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_NOT_FOUND_MESSAGE;
@@ -127,6 +129,12 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> handleUnauthorizedRestaurantAccessException(UnauthorizedRestaurantAccessException unauthorizedRestaurantAccessException) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, UNAUTHORIZED_RESTAURANT_ACCESS_MESSAGE));
+    }
+
+    @ExceptionHandler(UnauthorizedOrderAccessException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedOrderAccessException(UnauthorizedOrderAccessException unauthorizedOrderAccessException) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, UNAUTHORIZED_ORDER_ACCESS_MESSAGE));
     }
 
     @ExceptionHandler(EmployeeNotAssignedToRestaurantException.class)

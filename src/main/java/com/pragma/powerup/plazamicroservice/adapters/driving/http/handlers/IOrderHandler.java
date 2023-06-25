@@ -9,4 +9,5 @@ public interface IOrderHandler {
     Page<OrderResponseDto> getOrdersByStatus(String token, int numPage, int sizePage, String status);
     void assignEmployeeToOrder(String token, Long orderId);
     void notifyUserOrderDone(String token, Long orderId);
+    void cancelOrder(String token, Long orderId);
 }

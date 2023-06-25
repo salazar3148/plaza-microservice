@@ -3,6 +3,7 @@ import com.pragma.powerup.plazamicroservice.domain.api.IOrderServicePort;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.OrderIsNotInPendingStatusException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.PendingOrderException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedException;
+import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedOrderAccessException;
 import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestaurantAccessException;
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
 import com.pragma.powerup.plazamicroservice.domain.model.OrderDetails;
@@ -150,6 +151,31 @@ public class OrderUseCase implements IOrderServicePort {
         order.setStatus(
                 order.getStatus().nextState()
         );
+        orderPersistencePort.saveOrder(order);
+    }
+
+    @Override
+    public void cancelOrder(String token, Long orderId) {
+        User customerUser = userServicePort.getUser(token);
+
+        if(!customerUser.getIdRole().equals(CUSTOMER_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Order order = orderPersistencePort.getOrderById(orderId);
+
+        if(!order.getIdCustomer().equals(customerUser.getId())){
+            throw new UnauthorizedOrderAccessException();
+        }
+
+        if(!(order.getStatus() instanceof PendingState)) {
+            throw new OrderIsNotInPendingStatusException();
+        }
+
+        order.setStatus(
+                order.getStatus().cancel()
+        );
+
         orderPersistencePort.saveOrder(order);
     }
 }

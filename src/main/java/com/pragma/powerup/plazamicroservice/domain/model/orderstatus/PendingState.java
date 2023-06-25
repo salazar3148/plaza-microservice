@@ -7,9 +7,12 @@ public class PendingState implements OrderStatus{
     }
 
     @Override
+    public OrderStatus cancel() {
+        return new CanceledState();
+    }
+
+    @Override
     public String getToTable() {
         return "PENDING";
     }
-
-
 }
