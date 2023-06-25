@@ -32,6 +32,7 @@ public class Constants {
     public static final String EMPLOYEE_ASSIGMENT_SUCCESSFULLY_MESSAGE = "employee successfully assigned to the order";
     public static final String USER_ORDER_NOTIFY_MESSAGE = "the user has been notified and the verification code has been sent.";
     public static final String ORDER_CANCELED_MESSAGE = "order cancelled successfully";
+    public static final String ORDER_DELIVERED_MESSAGE = "order delivered successfully";
     public static final String ROLE_ASSIGNMENT_MESSAGE = "role assignment is not allowed";
     public static final String RESPONSE_ERROR_MESSAGE_KEY = "error";
     public static final String NO_DATA_FOUND_MESSAGE = "No data found for the requested petition";

@@ -26,6 +26,7 @@ import java.util.Map;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLOYEE_ASSIGMENT_SUCCESSFULLY_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_CANCELED_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_CREATED_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_DELIVERED_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.RESPONSE_MESSAGE_KEY;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_ORDER_NOTIFY_MESSAGE;
 @RestController
@@ -108,6 +109,6 @@ public class OrderRestController {
     public ResponseEntity<Map<String, String>> deliverOrder(@RequestHeader("Authorization") String token, @PathVariable Long orderId, @PathVariable Long verificationCode) {
         orderHandler.deliverOrder(token, orderId, String.format("%06d", verificationCode));
         return ResponseEntity.status(HttpStatus.OK)
-                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, ORDER_CANCELED_MESSAGE));
+                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, ORDER_DELIVERED_MESSAGE));
     }
 }
