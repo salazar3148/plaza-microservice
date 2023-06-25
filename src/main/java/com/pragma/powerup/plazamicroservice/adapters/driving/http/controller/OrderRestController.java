@@ -24,10 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.Map;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLOYEE_ASSIGMENT_SUCCESSFULLY_MESSAGE;
-import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_CREATED_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_CREATED_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.RESPONSE_MESSAGE_KEY;
-
-
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.USER_ORDER_NOTIFY_MESSAGE;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class OrderRestController {
     public ResponseEntity<Map<String, String>> savePlaza(@Valid @RequestBody OrderRequestDto orderRequestDto, @RequestHeader("Authorization") String token) {
         orderHandler.createOrder(token, orderRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, PLAZA_CREATED_MESSAGE));
+                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, ORDER_CREATED_MESSAGE));
     }
 
     @Operation(summary = "get order pages by order status",
@@ -70,5 +69,18 @@ public class OrderRestController {
         orderHandler.assignEmployeeToOrder(token, orderId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, EMPLOYEE_ASSIGMENT_SUCCESSFULLY_MESSAGE));
+    }
+
+    @Operation(summary = "notify user order done",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Employee successfully assigned to the order",
+                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "404", description = "Order not found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
+    @PatchMapping("/{orderId}/notify")
+    public ResponseEntity<Map<String, String>> notifyUserOrderDone(@RequestHeader("Authorization") String token, @PathVariable Long orderId) {
+        orderHandler.notifyUserOrderDone(token, orderId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Collections.singletonMap(RESPONSE_MESSAGE_KEY, USER_ORDER_NOTIFY_MESSAGE));
     }
 }

@@ -5,5 +5,6 @@ import lombok.Getter;
 @Getter
 public class UserDto {
     private Long id;
+    private String phone;
     private Long idRole;
 }

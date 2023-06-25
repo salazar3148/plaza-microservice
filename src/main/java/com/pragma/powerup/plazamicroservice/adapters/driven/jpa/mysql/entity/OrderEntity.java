@@ -34,4 +34,6 @@ public class OrderEntity {
     private Long idCustomer;
     @Column(name = "id_chef")
     private Long idChef;
+    @Column(name = "verification_code")
+    private String verificationCode;
 }

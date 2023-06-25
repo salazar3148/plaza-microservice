@@ -43,4 +43,9 @@ public class OrderHandlerImpl implements IOrderHandler {
     public void assignEmployeeToOrder(String token, Long orderId) {
         orderServicePort.assignEmployeeToOrder(token, orderId);
     }
+
+    @Override
+    public void notifyUserOrderDone(String token, Long orderId) {
+        orderServicePort.notifyUserOrderDone(token, orderId);
+    }
 }

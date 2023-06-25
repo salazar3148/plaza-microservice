@@ -7,10 +7,12 @@ import com.pragma.powerup.plazamicroservice.domain.exceptions.UnauthorizedRestau
 import com.pragma.powerup.plazamicroservice.domain.model.Order;
 import com.pragma.powerup.plazamicroservice.domain.model.OrderDetails;
 import com.pragma.powerup.plazamicroservice.domain.model.User;
+import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.InPreparationState;
 import com.pragma.powerup.plazamicroservice.domain.model.orderstatus.PendingState;
 import com.pragma.powerup.plazamicroservice.domain.spi.IEmployeeRestaurantPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderDetailsPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderPersistencePort;
+import com.pragma.powerup.plazamicroservice.domain.spi.ISmsServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import org.springframework.data.domain.Page;
 import java.time.LocalDate;
@@ -22,16 +24,16 @@ public class OrderUseCase implements IOrderServicePort {
 
     private final IOrderPersistencePort orderPersistencePort;
     private final IOrderDetailsPersistencePort orderDetailsPersistencePort;
-
     private final IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
-
     private final IUserServicePort userServicePort;
+    private final ISmsServicePort smsServicePort;
 
-    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDetailsPersistencePort orderDetailsPersistencePort, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort, IUserServicePort userServicePort) {
+    public OrderUseCase(IOrderPersistencePort orderPersistencePort, IOrderDetailsPersistencePort orderDetailsPersistencePort, IEmployeeRestaurantPersistencePort employeeRestaurantPersistencePort, IUserServicePort userServicePort, ISmsServicePort smsServicePort) {
         this.orderPersistencePort = orderPersistencePort;
         this.orderDetailsPersistencePort = orderDetailsPersistencePort;
         this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
         this.userServicePort = userServicePort;
+        this.smsServicePort = smsServicePort;
     }
 
     @Override
@@ -110,6 +112,44 @@ public class OrderUseCase implements IOrderServicePort {
                 order.getStatus().nextState()
         );
 
+        orderPersistencePort.saveOrder(order);
+    }
+
+    @Override
+    public void notifyUserOrderDone(String token, Long orderId) {
+        User employeeUser = userServicePort.getUser(token);
+
+        if(!employeeUser.getIdRole().equals(EMPLOYEE_ROLE_ID)){
+            throw new UnauthorizedException();
+        }
+
+        Order order = orderPersistencePort.getOrderById(orderId);
+
+        if (!order.getRestaurant().getId()
+                .equals(
+                        employeeRestaurantPersistencePort.findRestaurantIdByEmployeeId(employeeUser.getId()
+                        )
+                )) {
+            throw new UnauthorizedRestaurantAccessException();
+        }
+
+        if(!(order.getStatus() instanceof InPreparationState)){
+            throw new OrderIsNotInPendingStatusException();
+        }
+
+        User customerUser = userServicePort.getUserById(
+            token, order.getIdCustomer()
+        );
+
+        String verificationCode = smsServicePort.sendVerificationCode(
+                customerUser.getPhone()
+        );
+
+        order.setVerificationCode(verificationCode);
+
+        order.setStatus(
+                order.getStatus().nextState()
+        );
         orderPersistencePort.saveOrder(order);
     }
 }

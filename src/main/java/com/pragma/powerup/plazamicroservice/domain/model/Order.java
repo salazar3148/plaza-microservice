@@ -9,17 +9,19 @@ public class Order {
     private Plaza restaurant;
     private Long idCustomer;
     private Long idChef;
+    private String verificationCode;
 
     public Order() {
     }
 
-    public Order(Long id, LocalDate date, OrderStatus status, Plaza restaurant, Long idCustomer, Long idChef) {
+    public Order(Long id, LocalDate date, OrderStatus status, Plaza restaurant, Long idCustomer, Long idChef, String verificationCode) {
         this.id = id;
         this.date = date;
         this.status = status;
         this.restaurant = restaurant;
         this.idCustomer = idCustomer;
         this.idChef = idChef;
+        this.verificationCode = verificationCode;
     }
 
     public Long getId() {
@@ -69,4 +71,14 @@ public class Order {
     public void setIdChef(Long idChef) {
         this.idChef = idChef;
     }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
 }
+
+

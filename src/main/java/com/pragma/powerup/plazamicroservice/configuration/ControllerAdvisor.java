@@ -40,6 +40,7 @@ import static com.pragma.powerup.plazamicroservice.configuration.Constants.EMPLO
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.INVALID_STATE_TRANSITION_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.MAIL_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.NO_DATA_FOUND_MESSAGE;
+import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_IS_NOT_IN_PENDING_STATUS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.ORDER_NOT_FOUND_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PLAZA_ALREADY_EXISTS_MESSAGE;
 import static com.pragma.powerup.plazamicroservice.configuration.Constants.PERSON_NOT_FOUND_MESSAGE;
@@ -101,7 +102,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(OrderIsNotInPendingStatusException.class)
     public ResponseEntity<Map<String, String>> handleOrderIsNotInPendingStatusException(OrderIsNotInPendingStatusException orderIsNotInPendingStatusException) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY,  INVALID_STATE_TRANSITION_MESSAGE));
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY,  ORDER_IS_NOT_IN_PENDING_STATUS_MESSAGE));
     }
 
     @ExceptionHandler(PendingOrderException.class)

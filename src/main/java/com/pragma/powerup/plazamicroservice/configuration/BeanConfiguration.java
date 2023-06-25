@@ -6,7 +6,9 @@ import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.Em
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.OrderDetailsMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.OrderMySqlAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.PlazaMysqlAdapter;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.SmsServiceAdapter;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.adapter.UserServiceAdapter;
+import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.MessagingFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.feign.client.UserFeignClient;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.ICategoryEntityMapper;
 import com.pragma.powerup.plazamicroservice.adapters.driven.jpa.mysql.mappers.IDishEntityMapper;
@@ -29,6 +31,7 @@ import com.pragma.powerup.plazamicroservice.domain.spi.IEmployeeRestaurantPersis
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderDetailsPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IOrderPersistencePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IPlazaPersistencePort;
+import com.pragma.powerup.plazamicroservice.domain.spi.ISmsServicePort;
 import com.pragma.powerup.plazamicroservice.domain.spi.IUserServicePort;
 import com.pragma.powerup.plazamicroservice.domain.usecase.DishUseCase;
 import com.pragma.powerup.plazamicroservice.domain.usecase.OrderUseCase;
@@ -59,6 +62,9 @@ public class BeanConfiguration {
 
     private final UserFeignClient userFeignClient;
     private final IUserMapper userMapper;
+
+    private final MessagingFeignClient messagingFeignClient;
+
     @Bean
     public IPlazaPersistencePort plazaPersistencePort() {
         return new PlazaMysqlAdapter(plazaRepository, plazaEntityMapper);
@@ -91,11 +97,16 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), employeeRestaurantPersistencePort(), userServicePort());
+        return new OrderUseCase(orderPersistencePort(), orderDetailsPersistencePort(), employeeRestaurantPersistencePort(), userServicePort(), smsServicePort());
     }
     @Bean
     public IUserServicePort userServicePort(){
         return new UserServiceAdapter(userFeignClient, userMapper);
+    }
+
+    @Bean
+    public ISmsServicePort smsServicePort() {
+        return new SmsServiceAdapter(messagingFeignClient);
     }
 
     @Bean
